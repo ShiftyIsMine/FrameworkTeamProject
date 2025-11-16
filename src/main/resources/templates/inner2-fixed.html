@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songs List 2 - Music Collection</title>
+    <link rel="stylesheet" th:href="@{/css/assignmentinner2.css}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a.active {
+            background: #764ba2;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-section {
+            margin: 30px 0;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .search-form input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .search-form button {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-info {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .clear-search {
+            color: #667eea;
+            margin-left: 10px;
+        }
+
+        .filters {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .filter-group h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-tag {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .filter-tag:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .genre-tag {
+            cursor: default;
+            border-color: #1db954;
+            color: #1db954;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0 20px;
+        }
+
+        .table-header h2 {
+            color: #333;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .songs-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .songs-table thead {
+            background: #667eea;
+            color: white;
+        }
+
+        .songs-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .songs-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .songs-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .artist-cell {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .title-cell {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .genre-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .category-badge {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .song-links {
+            display: flex;
+            gap: 5px;
+        }
+
+        .link-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .link-btn.youtube {
+            background: #ff0000;
+        }
+
+        .link-btn.spotify {
+            background: #1db954;
+        }
+
+        .no-songs {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .page-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .page-btn.current {
+            background: #667eea;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            color: #666;
+        }
+
+        @media (max-width: 1200px) {
+            .songs-table {
+                font-size: 0.9rem;
+            }
+            
+            .songs-table th, .songs-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Music Collection - Songs List 2</h1>
+        </header>
+
+        <nav>
+            <div class="nav-links">
+                <a th:href="@{/}">Home</a>
+                <a th:href="@{/inner1}">Songs List 1</a>
+                <a th:href="@{/inner2}" class="active">Songs List 2</a>
+                <a th:href="@{/admin/}" sec:authorize="hasRole('ADMIN')">Admin</a>
+            </div>
+            <div class="auth-info">
+                <span>안녕하세요, <strong sec:authentication="name"></strong>님!</span>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="logout-btn">로그아웃</button>
+                </form>
+            </div>
+        </nav>
+
+        <!-- 검색 섹션 -->
+        <section class="search-section">
+            <form th:action="@{/inner2}" method="get" class="search-form">
+                <input type="text" name="search" th:value="${search}" placeholder="아티스트나 곡명으로 검색...">
+                <button type="submit">🔍 검색</button>
+            </form>
+            
+            <div class="filter-info" th:if="${search}">
+                검색어: <strong th:text="${search}"></strong>
+                <a th:href="@{/inner2}" class="clear-search">전체보기</a>
+            </div>
+        </section>
+
+        <!-- 카테고리 및 장르 필터 -->
+        <section class="filters" th:if="${categories != null or genres != null}">
+            <div class="filter-group" th:if="${categories != null and !categories.isEmpty()}">
+                <h3>📂 카테고리</h3>
+                <div class="filter-tags">
+                    <a th:each="cat : ${categories}" 
+                       th:href="@{/(category=${cat})}" 
+                       class="filter-tag" th:text="${cat}">Category</a>
+                </div>
+            </div>
+            
+            <div class="filter-group" th:if="${genres != null and !genres.isEmpty()}">
+                <h3>🎼 장르</h3>
+                <div class="filter-tags">
+                    <span th:each="genre : ${genres}" 
+                          class="filter-tag genre-tag" th:text="${genre}">Genre</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 테이블 헤더 -->
+        <div class="table-header">
+            <h2>📋 전체 곡 목록</h2>
+            <p>총 <strong th:text="${totalSongs}">0</strong>곡</p>
+        </div>
+
+        <!-- 곡 목록 테이블 -->
+        <section class="table-container" th:if="${songsPage != null and songsPage.hasContent()}">
+            <table class="songs-table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>아티스트</th>
+                        <th>곡명</th>
+                        <th>앨범</th>
+                        <th>장르</th>
+                        <th>발매년도</th>
+                        <th>카테고리</th>
+                        <th>재생시간</th>
+                        <th>링크</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="song, iterStat : ${songsPage.content}">
+                        <td th:text="${songsPage.number * songsPage.size + iterStat.index + 1}">1</td>
+                        <td class="artist-cell" th:text="${song.artist}">Artist</td>
+                        <td class="title-cell" th:text="${song.title}">Title</td>
+                        <td th:text="${song.album != null ? song.album : '-'}">Album</td>
+                        <td>
+                            <span th:if="${song.genre}" class="badge genre-badge" th:text="${song.genre}">Genre</span>
+                            <span th:unless="${song.genre}">-</span>
+                        </td>
+                        <td th:text="${song.yearReleased != null ? song.yearReleased : '-'}">Year</td>
+                        <td>
+                            <span th:if="${song.category}" class="badge category-badge" th:text="${song.category}">Category</span>
+                            <span th:unless="${song.category}">-</span>
+                        </td>
+                        <td>
+                            <span th:if="${song.duration}" 
+                                  th:text="${#numbers.formatInteger(song.duration / 60, 1)} + ':' + ${#strings.padLeft(#numbers.formatInteger(song.duration % 60, 1), 2, '0')}">3:45</span>
+                            <span th:unless="${song.duration}">-</span>
+                        </td>
+                        <td class="links-cell">
+                            <div class="song-links">
+                                <a th:if="${song.youtubeUrl != null and !song.youtubeUrl.isEmpty()}" 
+                                   th:href="${song.youtubeUrl}" target="_blank" class="link-btn youtube">YT</a>
+                                <a th:if="${song.spotifyUrl != null and !song.spotifyUrl.isEmpty()}" 
+                                   th:href="${song.spotifyUrl}" target="_blank" class="link-btn spotify">SP</a>
+                                <span th:if="${(song.youtubeUrl == null or song.youtubeUrl.isEmpty()) and (song.spotifyUrl == null or song.spotifyUrl.isEmpty())}">-</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 곡이 없을 때 -->
+        <div class="no-songs" th:if="${songsPage == null or songsPage.empty}">
+            <h3>🎵 표시할 곡이 없습니다</h3>
+            <p th:if="${search}">검색어 '<strong th:text="${search}"></strong>'에 해당하는 곡을 찾을 수 없습니다.</p>
+            <p th:unless="${search}">아직 등록된 곡이 없습니다.</p>
+        </div>
+
+        <!-- 페이징 -->
+        <nav class="pagination" th:if="${songsPage != null and songsPage.totalPages > 1}">
+            <a th:if="${songsPage.hasPrevious()}" 
+               th:href="@{/inner2(page=${songsPage.number - 1}, search=${search})}" 
+               class="page-btn">« 이전</a>
+            
+            <th:block th:each="i : ${#numbers.sequence(0, songsPage.totalPages - 1)}">
+                <a th:if="${i != songsPage.number}" 
+                   th:href="@{/inner2(page=${i}, search=${search})}" 
+                   class="page-btn" th:text="${i + 1}">1</a>
+                <span th:if="${i == songsPage.number}" 
+                      class="page-btn current" th:text="${i + 1}">1</span>
+            </th:block>
+            
+            <a th:if="${songsPage.hasNext()}" 
+               th:href="@{/inner2(page=${songsPage.number + 1}, search=${search})}" 
+               class="page-btn">다음 »</a>
+        </nav>
+
+        <footer>
+            <p>&copy; 2025 Music Collection Database. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

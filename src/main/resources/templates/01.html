@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Shifty's Playlist</title>
+    <link rel="stylesheet" href="/css/assignment.css"/>
+    <link rel="stylesheet" href="/css/assignmentinner1.css"/>
+    <link rel="stylesheet" href="/css/assignmentinner2.css"/>
+</head>
+<body id="background">
+    <div id="first">
+        <div class="box1" id="D6">
+            <img id="D6im" src="../imgs/DAY6.jpg" width="30%" height="25%">
+            <span>
+                <span class="Textbox1">DAY6</span>
+                <ul id="list1">
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/1nahzW3kfMuwReTka28tH5')">한 페이지가 될 수 있게</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_2')">I Loved You</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_3')">Congratulations</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_4')">Zombie</a></li>
+                </ul>
+            </span>
+        </div>
+    </div>
+    <div id="second">
+        <div class="box2" id="IN">
+            <img id="INim" src="../imgs/INFINITE.jpg" width="30%" height="25%">
+            <span>
+                <span class="Textbox2">INFINITE</span>
+                <ul id="list2">
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_5')">그리움이 닿는 곳에</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_6')">파라다이스(Paradise)</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_7')">마주보며 서 있어</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_8')">Man In Love</a></li>
+                </ul>
+            </span>
+        </div>
+    </div>
+    <div id="third">
+        <div class="box3" id="BB">
+            <img id="BBim" src="../imgs/BBMAK.jpg" width="30%" height="25%">
+            <span>
+                <span class="Textbox3">BBMAK</span>
+                <ul id="list3">
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_9')">Back Here</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_10')">Ghost Of You And Me</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_11')">Miss You More</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_12')">Sympathy</a></li>
+                </ul>
+            </span>
+        </div>
+    </div>
+    <div id="fourth">
+        <div class="box4" id="TS">
+            <img id="TSim" src="../imgs/TAYLOR.jpg" width="30%" height="25%">
+            <span>
+                <span class="Textbox4">Taylor Swift</span>
+                <ul id="list4">
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_13')">Enchanted</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_14')">Back To December</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_15')">Anti-Hero</a></li>
+                    <li><a href="#" onclick="showVideo('https://www.youtube.com/embed/some_video_id_16')">Fortnight</a></li>
+                </ul>
+            </span>
+        </div>
+    </div>
+    <p id="buttons">
+        <a href="assignment.html" class="myButton1"><img src="/imgs/image 17.png" width="10%" alt=""></a>
+        <a href="assignmentInner2.html" class="myButton2"><img src="/imgs/image 16.png" width="10%" alt=""></a>
+    </p>
+
+    <div id="videoContainer">
+        <button id="closeButton" onclick="closeVideo()">×</button>
+        <iframe id="videoPlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        function showVideo(url) {
+            var videoContainer = document.getElementById('videoContainer');
+            var videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = url;
+            videoContainer.style.display = 'block';
+        }
+
+        function closeVideo() {
+            var videoContainer = document.getElementById('videoContainer');
+            var videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = '';
+            videoContainer.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

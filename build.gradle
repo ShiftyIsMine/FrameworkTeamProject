@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'kr.ac.kopo'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // Spring Boot Starters - 기존
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation('se.michaelthelin.spotify:spotify-web-api-java:8.4.1') {
+        exclude group: 'org.apache.httpcomponents.client5', module: 'httpclient5'
+    }
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.4.1'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.1'
+    implementation 'org.apache.httpcomponents.core5:httpcore5:5.3.1'
+    // 추가된 DB 관련 의존성들
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // 데이터베이스 드라이버
+    runtimeOnly 'com.h2database:h2'  // H2 인메모리 DB (개발용)
+    runtimeOnly 'com.mysql:mysql-connector-j'  // MySQL (운영용)
+
+    // Lombok - 기존
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Development Tools - 기존
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Test Dependencies - 기존
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // 추가 유틸리티 (선택사항)
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'  // 모니터링
+    implementation 'org.springframework.boot:spring-boot-starter-cache'     // 캐싱
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 추가 설정
+bootJar {
+    archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
+}
+
+// JVM 옵션 설정 (선택사항)
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

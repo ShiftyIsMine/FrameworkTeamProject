@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Song from Spotify</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a69946 0%, #ead866 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #a29b4b;
+            margin-bottom: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        nav a {
+            color: #a29b4b;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background: #a29b4b;
+            color: white;
+        }
+
+        .search-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #a29b4b;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-box button {
+            padding: 15px 30px;
+            background: #1db954;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #1aa34a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(29, 185, 84, 0.4);
+        }
+
+        .results-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .song-result {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .song-result:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .song-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .song-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .song-details {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .year-badge {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .album-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .add-btn {
+            padding: 10px 20px;
+            background: #a29b4b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #a69946;
+            transform: scale(1.05);
+        }
+
+        .add-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #4caf50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🎵 Add Song from Spotify</h1>
+        <p>Spotify에서 곡을 검색하고 데이터베이스에 추가하세요!</p>
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/inner1}">Music List</a>
+            <a th:href="@{/inner2}">My Playlist</a>
+            <a th:href="@{/add-song}" class="active">Add Song</a>
+        </nav>
+    </header>
+
+    <div class="search-section">
+        <h2>Spotify에서 검색</h2>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="아티스트 또는 곡명을 입력하세요...">
+            <button onclick="searchSpotify()">검색</button>
+        </div>
+        <p style="color: #666; font-size: 0.9rem;">
+            예시: "DAY6 Zombie", "Taylor Swift Anti-Hero", "아이유 좋은날"
+        </p>
+    </div>
+
+    <div class="results-section">
+        <h2>검색 결과</h2>
+        <div id="loadingIndicator" class="loading">
+            <p>⏳ 검색 중...</p>
+        </div>
+        <div id="searchResults">
+            <div class="empty-state">
+                <h3>🎵 검색 결과가 여기에 표시됩니다</h3>
+                <p>위에서 아티스트나 곡명을 검색해보세요!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+
+<script>
+    let searchResults = [];
+
+    async function searchSpotify() {
+        const query = document.getElementById('searchInput').value.trim();
+
+        if (!query) {
+            showNotification('검색어를 입력해주세요', 'error');
+            return;
+        }
+
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultsContainer = document.getElementById('searchResults');
+
+        loadingIndicator.classList.add('show');
+        resultsContainer.innerHTML = '';
+
+        try {
+            const response = await fetch(`/api/spotify/search-spotify?query=${encodeURIComponent(query)}`);
+            const tracks = await response.json();
+
+            loadingIndicator.classList.remove('show');
+
+            if (tracks.length === 0) {
+                resultsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <h3>😕 검색 결과가 없습니다</h3>
+                            <p>다른 검색어로 시도해보세요</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            searchResults = tracks;
+            displayResults(tracks);
+
+        } catch (error) {
+            loadingIndicator.classList.remove('show');
+            showNotification('검색 중 오류가 발생했습니다', 'error');
+            console.error(error);
+        }
+    }
+
+    function displayResults(tracks) {
+        const resultsContainer = document.getElementById('searchResults');
+
+        resultsContainer.innerHTML = tracks.map((track, index) => `
+                <div class="song-result">
+                    ${track.imageUrl ? `<img src="${track.imageUrl}" alt="${track.name}" class="song-image">` : ''}
+                    <div class="song-info">
+                        <h3>${track.name}</h3>
+                        <p>${track.artist}</p>
+                        <div class="song-details">
+                            ${track.album ? `<span class="badge album-badge">${track.album}</span>` : ''}
+                            ${track.releaseYear ? `<span class="badge year-badge">${track.releaseYear}</span>` : ''}
+                        </div>
+                    </div>
+                    <button class="add-btn" id="addBtn${index}" onclick="addSong(${index})">
+                        ➕ 추가
+                    </button>
+                </div>
+            `).join('');
+    }
+
+    async function addSong(index) {
+        const track = searchResults[index];
+        const btn = document.getElementById(`addBtn${index}`);
+
+        btn.disabled = true;
+        btn.textContent = '추가 중...';
+
+        try {
+            const response = await fetch('/api/spotify/add-from-spotify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(track)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showNotification(`✅ "${track.name}"이(가) 추가되었습니다!`);
+                btn.textContent = '✅ 추가됨';
+                btn.style.background = '#4caf50';
+            } else {
+                showNotification('추가 실패: ' + data.message, 'error');
+                btn.disabled = false;
+                btn.textContent = '➕ 추가';
+            }
+
+        } catch (error) {
+            showNotification('추가 중 오류가 발생했습니다', 'error');
+            btn.disabled = false;
+            btn.textContent = '➕ 추가';
+            console.error(error);
+        }
+    }
+
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = 'notification show ' + (type === 'error' ? 'error' : '');
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    // Enter 키로 검색
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            searchSpotify();
+        }
+    });
+</script>
+</body>
+</html>

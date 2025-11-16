@@ -1,0 +1,237 @@
+
+        @font-face {
+            font-family: "luckiestguy";
+            src: url('../assets/fonts/luckiestguy.woff') format('woff');
+        }
+        /* @media screen and (min-width: 800px) {
+            .Textbox1 {
+            font-size: 16px;
+            }
+        } */
+        body{
+            background-image: url("../imgs/back.jpg");
+            background-size: contain;
+        }
+        /* .box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        } */
+        a{
+            text-decoration: none;
+            color: black;
+        }
+        a:visited {color: black;}
+        a:hover{color: black;}
+        a:active{color: black;}
+
+        #list2{
+            font-size: 2vw;
+            font-family: 'luckiestguy';
+            font-weight: normal;
+            /* text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+            list-style-type: none;
+            line-height: 3vw;
+            position : absolute;
+            text-align: right;
+            width: 55%;
+            height: 261px;
+            top : 24vw;
+            left: -12%;
+            letter-spacing: 10px;
+            margin-top: 4.5vw;
+        }
+        #list3{
+            font-size: 2vw;
+            line-height: 3vw;
+            font-family: 'luckiestguy';
+            font-weight: normal;
+            /* text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+            list-style-type: none;
+            position : absolute;
+            text-align: left;
+            width: 55%;
+            height: 261px;
+            top : 46vw;
+            left : 43%;
+            letter-spacing: 10px;
+            margin-top: 4.5vw;
+        }
+        .Textbox4{
+            font-size: 6vw;
+            font-weight: bolder;
+            font-family: 'luckiestguy';
+            text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            color: #F9DB3A;
+            position: absolute;
+            text-align: center;
+            width : 50%;
+            left : 11%;
+            margin-top: -10px;
+        }
+        #list4{
+            font-size: 2vw;
+            font-family: 'luckiestguy';
+            font-weight: normal;
+            /* text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+            list-style-type: none;
+            line-height: 3vw;
+            position : absolute;
+            text-align: right;
+            width: 55%;
+            height: 261px;
+            top : 68vw;
+            left: -12%;
+            letter-spacing: 10px;
+            margin-top: 6vw;
+        }
+        #Cha{
+            border-radius: 10%;
+        }
+        #Bel{
+            border-radius: 10%;
+            position: relative;
+            left : 70%;
+        }
+        /* .box1{
+            width:100%;
+        } */
+        #SGW{
+            border-radius: 10%;
+        }
+        #JB{
+            border-radius: 10%;
+            position:relative;
+            left:70%;
+        }
+
+        #list5{
+            font-size: 2vw;
+            line-height: 3vw;
+            font-family: 'luckiestguy';
+            font-weight: normal;
+            /* text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+            list-style-type: none;
+            position : absolute;
+            text-align: left;
+            width: 55%;
+            height: 261px;
+            /* top : 80px; */
+            top : 91vw;
+            left : 43%;
+            letter-spacing: 10px;
+            margin-top: 4.5vw;
+        }
+
+        #list6{
+            font-size: 2vw;
+            font-family: 'luckiestguy';
+            font-weight: normal;
+            /* text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+            list-style-type: none;
+            line-height: 3vw;
+            position : absolute;
+            text-align: right;
+            width: 55%;
+            height: 261px;
+            top : 111vw;
+            left: -12%;
+            letter-spacing: 10px;
+            margin-top: 4.5vw;
+        }
+        /* .Textbox3{
+            font-size: 6vw;
+            font-weight: bolder;
+            font-family: 'luckiestguy';
+            text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            color: #F9DB3A;
+            position: absolute;
+            float : right;
+            text-align: center;
+            width : 80%;
+            margin-top: -10px;
+            right : -4%;
+        } */
+        #list7{
+            font-size: 2vw;
+            line-height: 3vw;
+            font-family: 'luckiestguy';
+            font-weight: normal;
+            /* text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+            /* list-style-type: none; */
+            position : absolute;
+            text-align: left;
+            width: 55%;
+            height: 261px;
+            top : 130vw;
+            left : 43%;
+            letter-spacing: 10px;
+            margin-top: 4.5vw;
+        }
+        /* .Textbox4{
+            font-size: 6vw;
+            font-weight: bolder;
+            font-family: 'luckiestguy';
+            text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            color: #F9DB3A;
+            position: absolute;
+            text-align: center;
+            width : 40%;
+            left : 14%;
+            margin-top: -10px;
+        } */
+        #list8{
+            font-size: 2vw;
+            font-family: 'luckiestguy';
+            font-weight: bolder;
+            /* text-shadow : -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+            list-style-type: none;
+            line-height: 3vw;
+            position : absolute;
+            text-align: right;
+            width: 55%;
+            height: 261px;
+            top : 152vw;
+            left: -12%;
+            letter-spacing: 10px;
+            margin-top: 4.5vw;
+        }
+        #D6im{
+            border-radius: 10%;
+        }
+        #INim{
+            border-radius: 10%;
+            position: relative;
+            left : 70%;
+        }
+        /* .box1{
+            width:100%;
+        } */
+        #BBim{
+            border-radius: 10%;
+        }
+        #BBim2{
+            margin-top: 9%;
+            border-radius: 10%;
+        }
+        #TSim{
+            border-radius: 10%;
+            position:relative;
+            left:70%;
+        }
+        .myButton1 {
+            border-radius:100%;
+            cursor:pointer;
+            color:#ffffff;
+            position: absolute;
+        }
+        .myButton2 {
+            border-radius:100%;
+            cursor:pointer;
+            color:#ffffff;
+            position: absolute;
+            left : 5%;
+        }
+        #BTNbox{
+            text-align: center;
+        }

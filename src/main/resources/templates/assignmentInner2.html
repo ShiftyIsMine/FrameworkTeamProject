@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Playlist - Inner 2</title>
+    <link rel="stylesheet" th:href="@{/css/assignmentinner2.css}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #d2d4dc 0%, #afaeb1 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        nav a {
+            color: #a29b4b;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background: #a69946;
+            color: white;
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #000000;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .song-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .song-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgb(211, 159, 159);
+        }
+
+        .song-info h3 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .song-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .song-details {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .genre-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .year-badge {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .album-badge {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .song-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #a29b4b;
+        }
+
+        .btn-primary:hover {
+            background: #a69946;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #4caf50;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+        }
+
+        .btn-warning:hover {
+            background: #e68900;
+        }
+
+        .btn-spotify {
+            background: #1db954;
+        }
+
+        .btn-spotify:hover {
+            background: #1aa34a;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .favorite-btn.active {
+            color: #f44336;
+        }
+
+        .favorite-btn:not(.active) {
+            color: #ccc;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #4caf50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🎵 My Music Center</h1>
+        <p>환영합니다, <strong sec:authentication="name">user</strong>님!</p>
+        <nav>
+            <div>
+                <a th:href="@{/}">Home</a>
+                <a th:href="@{/inner1}">Music List</a>
+                <a th:href="@{/inner2}" class="active">My Playlist</a>
+                <a th:href="@{/add-song}" sec:authorize="hasRole('ADMIN')">Admin</a>
+            </div>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <div class="sections">
+        <!-- 내 재생목록 -->
+        <div class="section">
+            <h2>
+                <span>♫</span>
+                내 재생목록 (<span th:text="${playlistCount}">0</span>곡)
+            </h2>
+
+            <div th:if="${myPlaylist != null and !myPlaylist.isEmpty()}">
+                <div class="song-item" th:each="item : ${myPlaylist}">
+                    <div class="song-info">
+                        <h3 th:text="${item.song.title}">Song Title</h3>
+                        <p th:text="${item.song.artist}">Artist</p>
+                        <div class="song-details">
+                                <span class="badge genre-badge" th:if="${item.song.genre}"
+                                      th:text="${item.song.genre}">Genre</span>
+                            <span class="badge year-badge" th:if="${item.song.yearReleased}"
+                                  th:text="${item.song.yearReleased}">Year</span>
+                            <span class="badge album-badge" th:if="${item.song.album}"
+                                  th:text="${item.song.album}">Album</span>
+                        </div>
+                    </div>
+                    <div class="song-actions">
+                        <button class="favorite-btn"
+                                th:classappend="${item.isFavorite} ? 'active' : ''"
+                                th:onclick="'toggleFavorite(' + ${item.id} + ')'">
+                            ♥
+                        </button>
+                        <a th:if="${item.song.spotifyUrl}"
+                           th:href="${item.song.spotifyUrl}"
+                           target="_blank" class="btn btn-spotify">Spotify</a>
+                        <button class="btn btn-danger"
+                                th:onclick="'removeFromPlaylist(' + ${item.id} + ')'">
+                            삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:if="${myPlaylist == null or myPlaylist.isEmpty()}">
+                <h3>🎵 재생목록이 비어있습니다</h3>
+                <p>추천 노래에서 곡을 추가해보세요!</p>
+            </div>
+        </div>
+
+        <!-- 추천 노래 -->
+        <div class="section">
+            <h2>
+                <span>⭐</span>
+                추천 노래
+            </h2>
+
+            <div th:if="${recommendedSongs != null and !recommendedSongs.isEmpty()}">
+                <div class="song-item" th:each="song : ${recommendedSongs}">
+                    <div class="song-info">
+                        <h3 th:text="${song.title}">Song Title</h3>
+                        <p th:text="${song.artist}">Artist</p>
+                        <div class="song-details">
+                                <span class="badge genre-badge" th:if="${song.genre}"
+                                      th:text="${song.genre}">Genre</span>
+                            <span class="badge year-badge" th:if="${song.yearReleased}"
+                                  th:text="${song.yearReleased}">Year</span>
+                        </div>
+                    </div>
+                    <div class="song-actions">
+                        <button class="btn btn-success"
+                                th:onclick="'addToPlaylist(' + ${song.id} + ')'">
+                            + 추가
+                        </button>
+                        <a th:if="${song.spotifyUrl}"
+                           th:href="${song.spotifyUrl}"
+                           target="_blank" class="btn btn-spotify">Spotify</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:if="${recommendedSongs == null or recommendedSongs.isEmpty()}">
+                <h3>추천할 노래가 없습니다</h3>
+            </div>
+
+            <!-- 노래 추가 버튼 -->
+            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;"
+                    onclick="openAddSongModal()">
+                🎤 새 노래 추가하기
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 노래 추가 모달 -->
+<div id="addSongModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeAddSongModal()">&times;</span>
+        <h2>🎤 노래 검색 및 추가</h2>
+
+        <div class="search-box">
+            <input type="text" id="searchInput"
+                   placeholder="아티스트 또는 곡명으로 검색..."
+                   onkeyup="searchSongs()">
+        </div>
+
+        <div id="searchResults">
+            <div class="song-item" th:each="song : ${allSongs}">
+                <div class="song-info">
+                    <h3 th:text="${song.title}">Song Title</h3>
+                    <p th:text="${song.artist}">Artist</p>
+                </div>
+                <div class="song-actions">
+                    <button class="btn btn-success"
+                            th:onclick="'addToPlaylist(' + ${song.id} + ', true)'">
+                        + 추가
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 알림 -->
+<div id="notification" class="notification"></div>
+
+<script>
+    // 재생목록에 추가
+    async function addToPlaylist(songId, closeModal = false) {
+        try {
+            const response = await fetch(`/api/playlist/add/${songId}`, {
+                method: 'POST'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showNotification('✅ 재생목록에 추가되었습니다!');
+                if (closeModal) {
+                    setTimeout(() => {
+                        closeAddSongModal();
+                        location.reload();
+                    }, 1000);
+                } else {
+                    setTimeout(() => location.reload(), 1000);
+                }
+            } else {
+                showNotification('이미 재생목록에 있습니다', 'error');
+            }
+        } catch (error) {
+            showNotification('오류가 발생했습니다', 'error');
+            console.error(error);
+        }
+    }
+
+    // 재생목록에서 제거
+    async function removeFromPlaylist(playlistId) {
+        if (!confirm('재생목록에서 삭제하시겠습니까?')) return;
+
+        try {
+            const response = await fetch(`/api/playlist/remove/${playlistId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showNotification('✅ 재생목록에서 제거되었습니다');
+                setTimeout(() => location.reload(), 1000);
+            }
+        } catch (error) {
+            showNotification('오류가 발생했습니다', 'error');
+            console.error(error);
+        }
+    }
+
+    // 즐겨찾기 토글
+    async function toggleFavorite(playlistId) {
+        try {
+            const response = await fetch(`/api/playlist/favorite/${playlistId}`, {
+                method: 'POST'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                location.reload();
+            }
+        } catch (error) {
+            showNotification('오류가 발생했습니다', 'error');
+            console.error(error);
+        }
+    }
+
+    // 모달 열기/닫기
+    function openAddSongModal() {
+        document.getElementById('addSongModal').classList.add('active');
+    }
+
+    function closeAddSongModal() {
+        document.getElementById('addSongModal').classList.remove('active');
+    }
+
+    // 노래 검색
+    function searchSongs() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toLowerCase();
+        const results = document.getElementById('searchResults');
+        const items = results.getElementsByClassName('song-item');
+
+        for (let i = 0; i < items.length; i++) {
+            const title = items[i].querySelector('h3').textContent.toLowerCase();
+            const artist = items[i].querySelector('p').textContent.toLowerCase();
+
+            if (title.includes(filter) || artist.includes(filter)) {
+                items[i].style.display = '';
+            } else {
+                items[i].style.display = 'none';
+            }
+        }
+    }
+
+    // 알림 표시
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = 'notification show ' + (type === 'error' ? 'error' : '');
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+        const modal = document.getElementById('addSongModal');
+        if (event.target === modal) {
+            closeAddSongModal();
+        }
+    }
+</script>
+</body>
+</html>
