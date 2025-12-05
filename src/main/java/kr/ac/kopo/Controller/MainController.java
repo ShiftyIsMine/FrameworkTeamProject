@@ -31,24 +31,7 @@ public class MainController {
     private SongService songService;
 
     @GetMapping("/")
-    public String home(Model model,
-                       @RequestParam(defaultValue = "0") int page,
-                       @RequestParam(defaultValue = "12") int size,
-                       @RequestParam(required = false) String search) {
-
-        Page<Song> songsPage;
-
-        if (search != null && !search.trim().isEmpty()) {
-            songsPage = songService.searchSongs(search, page, size, "artist", "asc");
-            model.addAttribute("search", search);
-        } else {
-            songsPage = songService.getAllSongs(page, size, "artist", "asc");
-        }
-
-        model.addAttribute("songsPage", songsPage);
-        model.addAttribute("totalSongs", songService.getTotalSongCount());
-        model.addAttribute("categories", songService.getAllCategories());
-        model.addAttribute("artists", songService.getAllArtists());
+    public String home() {
 
         return "assignment";
     }
@@ -92,7 +75,7 @@ public class MainController {
 
     @GetMapping("/inner2")
     public String inner2(Model model, Authentication authentication) {
-        // ✅ 수정: findByUsername()으로 변경
+
         User user = userService.findByUsername(authentication.getName());
 
         // 사용자의 재생목록
@@ -101,7 +84,6 @@ public class MainController {
         // 추천 곡 (10개)
         List<Song> recommendedSongs = playlistService.getRecommendedSongs(user, 10);
 
-        // ✅ 수정: getAllSongs() 메서드 시그니처 수정
         List<Song> allSongs = songService.getAllSongsAsList();
 
         model.addAttribute("myPlaylist", myPlaylist);
@@ -135,6 +117,8 @@ public class MainController {
         }
     }
 
+
+    //지워도 되는 부분(수동으로 곡 추가했던 버전)
     @GetMapping("/api/categories")
     @ResponseBody
     public List<String> getCategories() {

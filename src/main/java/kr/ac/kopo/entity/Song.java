@@ -13,7 +13,7 @@ import lombok.Setter;
 @Data
 public class Song {
 
-    // Getters and Setters
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,12 +48,11 @@ public class Song {
 
     @Column(name = "image_url")
     private String imageUrl;
-    // Default constructor
     public Song() {}
 
-    // Constructor
+
     public Song(String artist, String title, String genre, Integer yearReleased,
-                String album, Integer duration, String youtubeUrl, String spotifyUrl, String category) {
+                String album, Integer duration, String youtubeUrl, String spotifyUrl, String category, String imageUrl) {
         this.artist = artist;
         this.title = title;
         this.genre = genre;
@@ -63,7 +62,7 @@ public class Song {
         this.youtubeUrl = youtubeUrl;
         this.spotifyUrl = spotifyUrl;
         this.category = category;
-        this.imageUrl = getImageUrl();
+        this.imageUrl = imageUrl;
     }
 
     @Override

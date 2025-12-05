@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**", "/h2-console/**")  // ✅ CSRF 예외
+                        .ignoringRequestMatchers("/api/**", "/h2-console/**")
                 )
                 .exceptionHandling(exceptions -> exceptions
                         .accessDeniedPage("/access-denied")

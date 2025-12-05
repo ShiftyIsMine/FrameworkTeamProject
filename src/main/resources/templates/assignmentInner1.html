@@ -22,7 +22,7 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            background: white url("static/imgs/back.jpg");
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -44,33 +44,55 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-links a {
-            padding: 10px 20px;
-            background: #ffffff;
-            color: black;
+        nav a {
+            color: #a29b4b;
             text-decoration: none;
+            padding: 8px 16px;
             border-radius: 5px;
             transition: all 0.3s;
         }
 
-        .nav-links a.active {
-            background: #a29b4b;
+        nav a:hover, nav a.active {
+            background: #a69946;
+            color: white;
         }
 
-        .nav-links a:hover {
-            transform: translateY(-2px);
-        }
+        /*nav {*/
+        /*    display: flex;*/
+        /*    justify-content: space-between;*/
+        /*    align-items: center;*/
+        /*    margin-bottom: 30px;*/
+        /*    padding: 15px;*/
+        /*    background: #f8f9fa;*/
+        /*    border-radius: 10px;*/
+        /*}*/
+
+        /*.nav-links {*/
+        /*    display: flex;*/
+        /*    gap: 15px;*/
+        /*}*/
+
+        /*.nav-links a {*/
+        /*    padding: 10px 20px;*/
+        /*    background: #ffffff;*/
+        /*    color: black;*/
+        /*    text-decoration: none;*/
+        /*    border-radius: 5px;*/
+        /*    transition: all 0.3s;*/
+        /*}*/
+
+        /*.nav-links a.active {*/
+        /*    background: #a29b4b;*/
+        /*}*/
+
+        /*.nav-links a:hover {*/
+        /*    transform: translateY(-2px);*/
+        /*}*/
 
         .auth-info {
             display: flex;
@@ -316,23 +338,10 @@
 <body>
 <div class="container">
     <header>
-        <h1>🎵 Music Collection - Songs List 1</h1>
+        <h1>Music Collection - Songs List 1</h1>
     </header>
 
-    <nav>
-        <div class="nav-links">
-            <a th:href="@{/}">Home</a>
-            <a th:href="@{/inner1}" class="active">Music List</a>
-            <a th:href="@{/inner2}">My Playlist</a>
-            <a th:href="@{/add-song}" sec:authorize="hasRole('ADMIN')">Admin</a>
-        </div>
-        <div class="auth-info">
-            <span>안녕하세요, <strong sec:authentication="name"></strong>님!</span>
-            <form th:action="@{/logout}" method="post" style="display: inline;">
-                <button type="submit" class="logout-btn">로그아웃</button>
-            </form>
-        </div>
-    </nav>
+    <th:block th:replace="~{/modules/navi}"></th:block>
 
     <!-- 검색 섹션 -->
     <section class="search-section">
@@ -368,7 +377,7 @@
                             </span>
                         <span th:if="${song.genre}" class="badge genre-badge" th:text="${song.genre}">Genre</span>
                         <span th:if="${song.category}" class="badge category-badge" th:text="${song.category}">Category</span>
-                        <img class="image-icon" th:src="${song.imageUrl}">
+                        <img th:if="${song.imageUrl}" class="image-icon" th:src="${song.imageUrl}" alt=""/>
                     </div>
 
                     <div th:if="${song.duration}" class="duration">
@@ -388,7 +397,7 @@
 
         <!-- 곡이 없을 때 -->
         <div class="no-songs" th:if="${songsPage == null or songsPage.empty}">
-            <h3>🎵 표시할 곡이 없습니다</h3>
+            <h3>표시할 곡이 없습니다</h3>
             <p th:if="${search}">검색어 '<strong th:text="${search}"></strong>'에 해당하는 곡을 찾을 수 없습니다.</p>
             <p th:unless="${search}">아직 등록된 곡이 없습니다.</p>
         </div>
@@ -412,10 +421,8 @@
            th:href="@{/inner1(page=${songsPage.number + 1}, search=${search})}"
            class="page-btn">다음 »</a>
     </nav>
+    <th:block th:replace="~{/modules/footer}"></th:block>
 
-    <footer>
-        <p>&copy; 2025 Music Collection Database. All rights reserved.</p>
-    </footer>
 </div>
 </body>
 </html>

@@ -65,7 +65,7 @@
 
     .form-group input:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: #99a24b;
     }
 
     .login-btn {
@@ -93,6 +93,9 @@
       font-weight: 600;
       cursor: pointer;
       transition: transform 0.2s;
+      text-underline: none;
+      text-underline-style: none;
+      align-content: center;
     }
 
     .login-btn:hover {
@@ -124,7 +127,7 @@
     }
 
     .home-link a {
-      color: #667eea;
+      color: #000000;
       text-decoration: none;
       font-size: 0.9rem;
     }
@@ -144,6 +147,11 @@
 
     .demo-info strong {
       color: #495057;
+    }
+    .sign-up-form{
+      width: 100%;
+      max-width: 400px;
+      align-content: center;
     }
   </style>
 </head>
@@ -190,8 +198,11 @@
     </div>
 
     <button type="submit" class="login-btn">로그인</button>
-    <button type="submit" class="sign-up">회원가입</button>
+
   </form>
+  <div class="sign-up-form">
+    <button type="button" class="sign-up" th:onclick="|location.href='@{/signup}'|"> 회원가입 </button>
+  </div>
 
   <div class="home-link">
     <a th:href="@{/}">홈으로 돌아가기</a>

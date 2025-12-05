@@ -25,9 +25,9 @@ public class SpotifyController {
     private final SongService songService;
 
     private final SpotifyService spotifyService;
-    /**
-     * Spotify에서 곡 검색
-     */
+
+     //Spotify에서 곡 검색
+
     @GetMapping("/search-spotify")
     public ResponseEntity<?> searchSpotify(@RequestParam String query) {
 
@@ -50,9 +50,8 @@ public class SpotifyController {
         }
     }
 
-    /**
-     * Spotify에서 검색한 곡을 DB에 추가
-     */
+//Spotify에서 검색한 곡을 DB에 추가
+
     @PostMapping("/add-from-spotify")
     public ResponseEntity<Map<String, Object>> addFromSpotify(
             @RequestBody SpotifyTrackDto trackDto) {
@@ -70,6 +69,7 @@ public class SpotifyController {
             song.setSpotifyUrl(trackDto.getSpotifyUrl());
             song.setGenre(inferGenre(trackDto.getArtist()));
             song.setCategory(inferCategory(trackDto.getArtist()));
+            song.setImageUrl(trackDto.getImageUrl());
 
             // DB에 저장
             Song savedSong = songService.saveSong(song);
@@ -87,9 +87,8 @@ public class SpotifyController {
         }
     }
 
-    /**
-     * 장르 추론
-     */
+//장르 추론
+
     private String inferGenre(String artist) {
         if (isKoreanArtist(artist)) {
             return "K-Pop";
@@ -97,9 +96,8 @@ public class SpotifyController {
         return "Pop";
     }
 
-    /**
-     * 카테고리 추론
-     */
+//카테고리 추론
+
     private String inferCategory(String artist) {
         if (isKoreanArtist(artist)) {
             return "K-POP";
@@ -107,15 +105,12 @@ public class SpotifyController {
         return "POP";
     }
 
-    /**
-     * 한국 아티스트 여부 확인
-     */
+//한국 아티스트 여부 확인
+
     private boolean isKoreanArtist(String artist) {
         return artist.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*");
     }
-    /**
-     * 곡 검색
-     */
+    //곡 검색
     @GetMapping("/search")
     public ResponseEntity<List<SpotifyTrackDto>> searchTracks(
             @RequestParam String artist,
@@ -125,9 +120,8 @@ public class SpotifyController {
         return ResponseEntity.ok(tracks);
     }
 
-    /**
-     * 아티스트로 검색
-     */
+    //아티스트로 검색
+
     @GetMapping("/artist/{artistName}")
     public ResponseEntity<List<SpotifyTrackDto>> searchByArtist(
             @PathVariable String artistName) {
@@ -136,9 +130,8 @@ public class SpotifyController {
         return ResponseEntity.ok(tracks);
     }
 
-    /**
-     * Spotify URL 가져오기
-     */
+    //Spotify URL 가져오기
+
     @GetMapping("/url")
     public ResponseEntity<String> getSpotifyUrl(
             @RequestParam String artist,
@@ -151,9 +144,8 @@ public class SpotifyController {
         return ResponseEntity.notFound().build();
     }
 
-    /**
-     * Track ID로 상세 정보 조회
-     */
+    //Track ID로 상세 정보 조회
+
     @GetMapping("/track/{trackId}")
     public ResponseEntity<SpotifyTrackDto> getTrack(@PathVariable String trackId) {
         SpotifyTrackDto track = spotifyService.getTrackById(trackId);

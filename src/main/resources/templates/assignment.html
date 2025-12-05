@@ -16,15 +16,12 @@
         <main id="main1">
             <p class = "Textbox" id="INname">Shifty's<br>Playlist<br>
                 <a th:href="@{/inner1}" class="myButton"><img src="../imgs/button.jpg" width = "30%" height = "30%"></a>
+
             </p>
             <img class = "bartbox" id="Bart" src="../imgs/bart2.gif">
         </main>
-        <div sec:authorize="isAuthenticated()">
-            <span>안녕하세요, <strong sec:authentication="name"></strong>님!</span>
-            <form th:action="@{/logout}" method="post" style="display: inline;">
-                <button type="submit" class="logout-btn">로그아웃</button>
-            </form>
-        </div>
+
     </div>
+
 </body>
 </html>

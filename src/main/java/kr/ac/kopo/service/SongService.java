@@ -25,9 +25,7 @@ public class SongService {
     @Autowired(required = false)
     private SpotifyService spotifyService;
 
-    /**
-     * Get all songs (no pagination)
-     */
+
     public List<Song> getAllSongs() {
         return songRepository.findAll();
     }
@@ -35,9 +33,6 @@ public class SongService {
         return songRepository.findAll(Sort.by("artist").ascending());
     }
 
-    /**
-     * Get songs with pagination
-     */
     public Page<Song> getAllSongs(int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase("desc") ?
                 Sort.by(sortBy).descending() :
@@ -47,26 +42,18 @@ public class SongService {
         return songRepository.findAll(pageable);
     }
 
-    /**
-     * Get song by ID
-     */
+
     public Optional<Song> getSongById(Long id) {
         return songRepository.findById(id);
     }
 
-    /**
-     * Save song
-     *
-     * @return
-     */
+
     public Song saveSong(Song song) {
         songRepository.save(song);
         return song;
     }
 
-    /**
-     * Update song
-     */
+//Update song
     public void updateSong(Long id, Song songDetails) {
         songRepository.findById(id)
                 .map(song -> {
@@ -79,21 +66,20 @@ public class SongService {
                     song.setYoutubeUrl(songDetails.getYoutubeUrl());
                     song.setSpotifyUrl(songDetails.getSpotifyUrl());
                     song.setCategory(songDetails.getCategory());
+                    song.setImageUrl(songDetails.getImageUrl());
                     return songRepository.save(song);
                 })
                 .orElseThrow(() -> new RuntimeException("Song not found with id: " + id));
     }
 
-    /**
-     * Delete song
-     */
+//Delete song
+
     public void deleteSong(Long id) {
         songRepository.deleteById(id);
     }
 
-    /**
-     * Search songs (no pagination)
-     */
+//Search songs
+
     public List<Song> searchSongs(String searchTerm) {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             return getAllSongs();
@@ -101,9 +87,8 @@ public class SongService {
         return songRepository.searchByArtistOrTitle(searchTerm.trim());
     }
 
-    /**
-     * Search songs with pagination
-     */
+    //Search songs with pagination
+
     public Page<Song> searchSongs(String searchTerm, int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase("desc") ?
                 Sort.by(sortBy).descending() :
@@ -117,16 +102,13 @@ public class SongService {
         return songRepository.searchSongs(searchTerm.trim(), pageable);
     }
 
-    /**
-     * Get songs by artist
-     */
+    //Get songs by artist
+
     public List<Song> getSongsByArtist(String artist) {
         return songRepository.findByArtistContainingIgnoreCase(artist);
     }
 
-    /**
-     * Get songs by category (no pagination)
-     */
+    //Get songs by category
     public List<Song> getSongsByCategory(String category) {
         return songRepository.findByCategory(category);
     }
@@ -143,79 +125,58 @@ public class SongService {
         return songRepository.findByCategory(category, pageable);
     }
 
-    /**
-     * Get songs by genre
-     */
+    //Get songs by genre
+
     public List<Song> getSongsByGenre(String genre) {
         return songRepository.findByGenre(genre);
     }
 
-    /**
-     * Get songs by year
-     */
+    // Get songs by year
+
     public List<Song> getSongsByYear(Integer year) {
         return songRepository.findByYearReleased(year);
     }
 
-    /**
-     * Get songs by year range
-     */
+    //Get songs by year range
+
     public List<Song> getSongsByYearRange(Integer startYear, Integer endYear) {
         return songRepository.findByYearReleasedBetween(startYear, endYear);
     }
 
-    /**
-     * Get all categories
-     */
+
     public List<String> getAllCategories() {
         return songRepository.findAllCategories();
     }
 
-    /**
-     * Get all genres
-     */
+
     public List<String> getAllGenres() {
         return songRepository.findAllGenres();
     }
 
-    /**
-     * Get all artists
-     */
     public List<String> getAllArtists() {
         return songRepository.findAllArtists();
     }
 
-    /**
-     * Get random songs
-     */
     public List<Song> getRandomSongs(int limit) {
         return songRepository.findRandomSongs(limit);
     }
 
-    /**
-     * Get latest songs
-     */
+
     public List<Song> getLatestSongs() {
         return songRepository.findTop10ByOrderByIdDesc();
     }
 
-    /**
-     * Get song count by category
-     */
+
     public Long getSongCountByCategory(String category) {
         return songRepository.countByCategory(category);
     }
 
-    /**
-     * Get song count by artist
-     */
+
     public Long getSongCountByArtist(String artist) {
         return songRepository.countByArtistContainingIgnoreCase(artist);
     }
 
-    /**
-     * Get total song count
-     */
+
     public Long getTotalSongCount() {
         return songRepository.count();
     }

@@ -32,7 +32,7 @@
         }
 
         h1 {
-            color: #a29b4b;
+            color: #000000;
             margin-bottom: 10px;
         }
 
@@ -247,7 +247,7 @@
 <body>
 <div class="container">
     <header>
-        <h1>🎵 Add Song from Spotify</h1>
+        <h1>Add Song from Spotify</h1>
         <p>Spotify에서 곡을 검색하고 데이터베이스에 추가하세요!</p>
         <nav>
             <a th:href="@{/}">Home</a>
@@ -260,22 +260,22 @@
     <div class="search-section">
         <h2>Spotify에서 검색</h2>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="아티스트 또는 곡명을 입력하세요...">
+            <input type="text" id="searchInput" placeholder="아티스트 또는 곡명을 입력하세요">
             <button onclick="searchSpotify()">검색</button>
         </div>
         <p style="color: #666; font-size: 0.9rem;">
-            예시: "DAY6 Zombie", "Taylor Swift Anti-Hero", "아이유 좋은날"
+            아무거나 다 찾아 줌
         </p>
     </div>
 
     <div class="results-section">
         <h2>검색 결과</h2>
         <div id="loadingIndicator" class="loading">
-            <p>⏳ 검색 중...</p>
+            <p>검색 중...</p>
         </div>
         <div id="searchResults">
             <div class="empty-state">
-                <h3>🎵 검색 결과가 여기에 표시됩니다</h3>
+                <h3>검색 결과가 여기에 표시됩니다</h3>
                 <p>위에서 아티스트나 곡명을 검색해보세요!</p>
             </div>
         </div>

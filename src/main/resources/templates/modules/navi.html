@@ -1,0 +1,14 @@
+<nav xmlns:sec="http://www.w3.org/1999/xhtml">
+  <div class="nav-links">
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/inner1}" class="active">Music List</a>
+    <a th:href="@{/inner2}">My Playlist</a>
+    <a th:href="@{/add-song}" sec:authorize="hasRole('ADMIN')">Admin</a>
+  </div>
+  <div class="auth-info">
+    <span>하이욥 <strong sec:authentication="name"></strong>님!</span>
+    <form th:action="@{/logout}" method="post" style="display: inline;">
+      <button type="submit" class="logout-btn">로그아웃</button>
+    </form>
+  </div>
+</nav>

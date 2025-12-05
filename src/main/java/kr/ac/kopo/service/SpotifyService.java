@@ -32,9 +32,6 @@ public class SpotifyService {
     private String accessToken;
     private long tokenExpirationTime;
 
-    /**
-     * Access Token 갱신
-     */
     private void refreshAccessToken() {
         try {
             ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
@@ -45,24 +42,19 @@ public class SpotifyService {
 
             spotifyApi.setAccessToken(accessToken);
 
-            log.info("✅ Spotify Access Token 갱신 성공");
+
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
-            log.error("❌ Spotify Access Token 갱신 실패: " + e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
-    /**
-     * Token 유효성 확인
-     */
+
     private void ensureValidToken() {
         if (accessToken == null || System.currentTimeMillis() >= tokenExpirationTime - 60000) {
             refreshAccessToken();
         }
     }
 
-    /**
-     * 🎯 아티스트와 곡명으로 검색
-     */
     public List<SpotifyTrackDto> searchTracks(String artist, String title) {
         try {
             ensureValidToken();
@@ -81,18 +73,14 @@ public class SpotifyService {
                 tracks.add(convertToDto(track));
             }
 
-            log.info("✅ 검색 성공: {} - {} ({}건 발견)", artist, title, tracks.size());
             return tracks;
 
         } catch (Exception e) {
-            log.error("❌ 검색 실패: {} - {} -> {}", artist, title, e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    /**
-     * 아티스트로만 검색
-     */
+    //아티스트로만 검색
     public List<SpotifyTrackDto> searchByArtist(String artistName) {
         try {
             ensureValidToken();
@@ -109,18 +97,17 @@ public class SpotifyService {
                 tracks.add(convertToDto(track));
             }
 
-            log.info("✅ 아티스트 검색 성공: {} ({}건)", artistName, tracks.size());
+
             return tracks;
 
         } catch (Exception e) {
-            log.error("❌ 아티스트 검색 실패: {} -> {}", artistName, e.getMessage());
+            log.error("아티스트 검색 실패: {} -> {}", artistName, e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    /**
-     * Spotify URL 가져오기
-     */
+    //Spotify URL 가져오기
+
     public String getSpotifyUrl(String artist, String title) {
         try {
             ensureValidToken();
@@ -137,22 +124,21 @@ public class SpotifyService {
             if (trackPaging.getItems().length > 0) {
                 Track track = trackPaging.getItems()[0];
                 String spotifyUrl = track.getExternalUrls().get("spotify");
-                log.info("✅ Spotify URL: {} - {} -> {}", artist, title, spotifyUrl);
+                log.info("Spotify URL: {} - {} -> {}", artist, title, spotifyUrl);
                 return spotifyUrl;
             }
 
-            log.warn("⚠️ Spotify URL 없음: {} - {}", artist, title);
+            log.warn("Spotify URL 없음: {} - {}", artist, title);
             return null;
 
         } catch (Exception e) {
-            log.error("❌ URL 가져오기 실패: {} - {} -> {}", artist, title, e.getMessage());
+            log.error("URL 가져오기 실패: {} - {} -> {}", artist, title, e.getMessage());
             return null;
         }
     }
 
-    /**
-     * Track ID로 상세 정보 조회
-     */
+    //Track ID로 상세 정보 조회
+
     public SpotifyTrackDto getTrackById(String trackId) {
         try {
             ensureValidToken();
@@ -163,14 +149,12 @@ public class SpotifyService {
             return convertToDto(track);
 
         } catch (Exception e) {
-            log.error("❌ Track 조회 실패: {} -> {}", trackId, e.getMessage());
+            log.error("Track 조회 실패: {} -> {}", trackId, e.getMessage());
             return null;
         }
     }
 
-    /**
-     * 🎯 아티스트와 곡명으로 Song 엔티티 자동 완성
-     */
+    //아티스트와 곡명으로 Song 엔티티 자동 완성
     public Song enrichSongFromSpotify(String artist, String title) {
         try {
             ensureValidToken();
@@ -201,7 +185,7 @@ public class SpotifyService {
                     song.setYearReleased(extractYear(album.getReleaseDate()));
                 }
 
-                // 재생시간 (밀리초 → 초)
+                // 재생시간
                 song.setDuration(track.getDurationMs() / 1000);
 
                 // 장르 추론
@@ -210,23 +194,21 @@ public class SpotifyService {
                 // 카테고리 자동 분류
                 song.setCategory(categorizeByArtist(artist));
 
-                log.info("✅ Song 완성: {} - {} ({}년, {}초)",
+                log.info("Song 완성: {} - {} ({}년, {}초)",
                         artist, title, song.getYearReleased(), song.getDuration());
 
                 return song;
             } else {
-                log.warn("⚠️ Spotify에서 찾을 수 없음: {} - {}", artist, title);
+                log.warn("Spotify에서 찾을 수 없음: {} - {}", artist, title);
                 return createBasicSong(artist, title);
             }
         } catch (Exception e) {
-            log.error("❌ Song 완성 실패: {} - {} -> {}", artist, title, e.getMessage());
+            log.error("Song 완성 실패: {} - {} -> {}", artist, title, e.getMessage());
             return createBasicSong(artist, title);
         }
     }
 
-    /**
-     * Track을 DTO로 변환
-     */
+    //Track을 DTO로 변환
     private SpotifyTrackDto convertToDto(Track track) {
         String artistName = track.getArtists().length > 0 ?
                 track.getArtists()[0].getName() : "Unknown";
@@ -237,10 +219,10 @@ public class SpotifyService {
         Integer releaseYear = track.getAlbum() != null ?
                 extractYear(track.getAlbum().getReleaseDate()) : null;
 
-        String imageUrl = null;
-        if (track.getAlbum() != null && track.getAlbum().getImages().length > 0) {
-            imageUrl = track.getAlbum().getImages()[0].getUrl();
-        }
+//        String imageUrl = null;
+//        if (track.getAlbum() != null && track.getAlbum().getImages().length > 0) {
+//            imageUrl = track.getAlbum().getImages()[0].getUrl();
+//        }
 
         return SpotifyTrackDto.builder()
                 .id(track.getId())
@@ -251,14 +233,12 @@ public class SpotifyService {
                 .durationMs(track.getDurationMs())
                 .spotifyUrl(track.getExternalUrls().get("spotify"))
                 .previewUrl(track.getPreviewUrl())
-                .imageUrl(imageUrl)
+                .imageUrl(track.getAlbum().getImages()[0].getUrl())
                 .popularity(track.getPopularity())
                 .build();
     }
 
-    /**
-     * 발매일에서 연도 추출
-     */
+//발매일에서 연도 추출
     private Integer extractYear(String releaseDate) {
         if (releaseDate != null && releaseDate.length() >= 4) {
             try {
@@ -270,9 +250,8 @@ public class SpotifyService {
         return null;
     }
 
-    /**
-     * 아티스트 기반 장르 추론
-     */
+//아티스트 기반 장르 추론
+
     private String inferGenreFromArtist(String artist) {
         if (isKoreanArtist(artist)) {
             return "K-Pop";
@@ -280,9 +259,8 @@ public class SpotifyService {
         return "Pop";
     }
 
-    /**
-     * 아티스트 기반 카테고리 분류
-     */
+//아티스트 기반 카테고리 분류
+
     private String categorizeByArtist(String artist) {
         if (isKoreanArtist(artist)) {
             return "K-POP";
@@ -290,9 +268,6 @@ public class SpotifyService {
         return "POP";
     }
 
-    /**
-     * 한국 아티스트 여부 확인
-     */
     private boolean isKoreanArtist(String artist) {
         String[] koreanArtists = {
                 "DAY6", "INFINITE", "Davichi", "다비치", "아이유", "IU",
@@ -308,9 +283,8 @@ public class SpotifyService {
         return artist.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*");
     }
 
-    /**
-     * 기본 Song 객체 생성
-     */
+//기본 Song 객체 생성
+
     private Song createBasicSong(String artist, String title) {
         Song song = new Song();
         song.setArtist(artist);
@@ -319,9 +293,7 @@ public class SpotifyService {
         song.setCategory(categorizeByArtist(artist));
         return song;
     }
-    /**
-     * 통합 검색 (아티스트 + 곡명)
-     */
+
     public List<SpotifyTrackDto> searchTracksUnified(String query) {
         try {
             ensureValidToken();
@@ -338,11 +310,11 @@ public class SpotifyService {
                 tracks.add(convertToDto(track));
             }
 
-            log.info("✅ 통합 검색 성공: {} ({}건 발견)", query, tracks.size());
+            log.info("통합 검색 성공: {} ({}건 발견)", query, tracks.size());
             return tracks;
 
         } catch (Exception e) {
-            log.error("❌ 통합 검색 실패: {} -> {}", query, e.getMessage());
+            log.error("통합 검색 실패: {} -> {}", query, e.getMessage());
             return new ArrayList<>();
         }
     }

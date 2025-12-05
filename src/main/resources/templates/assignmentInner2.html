@@ -33,7 +33,7 @@
         }
 
         h1 {
-            color: #667eea;
+            color: #000000;
             margin-bottom: 10px;
         }
 
@@ -273,7 +273,7 @@
         }
 
         .modal-content h2 {
-            color: #667eea;
+            color: #000000;
             margin-bottom: 20px;
         }
 
@@ -325,26 +325,16 @@
 <body>
 <div class="container">
     <header>
-        <h1>🎵 My Music Center</h1>
+        <h1>My Music Center</h1>
         <p>환영합니다, <strong sec:authentication="name">user</strong>님!</p>
-        <nav>
-            <div>
-                <a th:href="@{/}">Home</a>
-                <a th:href="@{/inner1}">Music List</a>
-                <a th:href="@{/inner2}" class="active">My Playlist</a>
-                <a th:href="@{/add-song}" sec:authorize="hasRole('ADMIN')">Admin</a>
-            </div>
-            <form th:action="@{/logout}" method="post" style="display: inline;">
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </nav>
+        <th:block th:replace="~{/modules/navi}"></th:block>
     </header>
 
     <div class="sections">
         <!-- 내 재생목록 -->
         <div class="section">
             <h2>
-                <span>♫</span>
+                <span></span>
                 내 재생목록 (<span th:text="${playlistCount}">0</span>곡)
             </h2>
 
@@ -380,8 +370,7 @@
             </div>
 
             <div class="empty-state" th:if="${myPlaylist == null or myPlaylist.isEmpty()}">
-                <h3>🎵 재생목록이 비어있습니다</h3>
-                <p>추천 노래에서 곡을 추가해보세요!</p>
+                <h3>재생목록이 비어있습니다</h3>
             </div>
         </div>
 
@@ -423,7 +412,7 @@
             <!-- 노래 추가 버튼 -->
             <button class="btn btn-primary" style="width: 100%; margin-top: 20px;"
                     onclick="openAddSongModal()">
-                🎤 새 노래 추가하기
+                새 노래 추가하기
             </button>
         </div>
     </div>
@@ -433,7 +422,7 @@
 <div id="addSongModal" class="modal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeAddSongModal()">&times;</span>
-        <h2>🎤 노래 검색 및 추가</h2>
+        <h2>노래 검색 및 추가</h2>
 
         <div class="search-box">
             <input type="text" id="searchInput"
@@ -456,6 +445,7 @@
             </div>
         </div>
     </div>
+    <th:block th:replace="~{/modules/footer}"></th:block>
 </div>
 
 <!-- 알림 -->
@@ -472,7 +462,7 @@
             const data = await response.json();
 
             if (data.success) {
-                showNotification('✅ 재생목록에 추가되었습니다!');
+                showNotification('재생목록에 추가되었습니다!');
                 if (closeModal) {
                     setTimeout(() => {
                         closeAddSongModal();
@@ -502,7 +492,7 @@
             const data = await response.json();
 
             if (data.success) {
-                showNotification('✅ 재생목록에서 제거되었습니다');
+                showNotification('재생목록에서 제거되었습니다');
                 setTimeout(() => location.reload(), 1000);
             }
         } catch (error) {
@@ -576,5 +566,6 @@
         }
     }
 </script>
+
 </body>
 </html>

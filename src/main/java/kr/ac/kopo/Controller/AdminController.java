@@ -195,33 +195,33 @@ public class AdminController {
     }
     private final SpotifyUrlUpdater spotifyUrlUpdater;
 
-    /**
-     * Spotify URL 일괄 업데이트 (관리자 전용)
-     */
+
+     //Spotify URL 일괄 업데이트 (관리자 전용)
+
     @RequestMapping(value = "/update-spotify-urls", method = {RequestMethod.GET, RequestMethod.POST})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> updateSpotifyUrls() {
         try {
             spotifyUrlUpdater.updateAllSpotifyUrls();
-            return ResponseEntity.ok("✅ Spotify URL 업데이트 완료!");
+            return ResponseEntity.ok("Spotify URL 업데이트 완료!");
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                    .body("❌ 업데이트 실패: " + e.getMessage());
+                    .body("업데이트 실패: " + e.getMessage());
         }
     }
 
-    /**
-     * 전체 곡 정보 일괄 업데이트
-     */
+
+    //전체 곡 정보 일괄 업데이트
+
     @RequestMapping(value = "/update-all-info", method = {RequestMethod.GET, RequestMethod.POST})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> updateAllInfo() {
         try {
             spotifyUrlUpdater.updateAllSongInfo();
-            return ResponseEntity.ok("✅ 전체 정보 업데이트 완료!");
+            return ResponseEntity.ok("전체 정보 업데이트 완료!");
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                    .body("❌ 업데이트 실패: " + e.getMessage());
+                    .body(" 업데이트 실패: " + e.getMessage());
         }
     }
 }

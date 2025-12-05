@@ -51,13 +51,12 @@ public class DataInitializer implements CommandLineRunner {
         user.setRole(User.Role.valueOf("USER"));
         userService.createUser(user);
 
-        System.out.println("✅ Default users created: admin/admin123, user/user123");
     }
 
     private void initializeSongs() {
         System.out.println("🎵 Spotify API로 곡 정보 자동 채우기 시작...");
 
-        // 🎯 아티스트명과 곡명만 입력하면 끝!
+//아티스트명과 곡명만 입력하면 끝!
 
         // DAY6
         addSong("DAY6", "한 페이지가 될 수 있게");
@@ -110,30 +109,29 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("✅ 모든 곡이 Spotify 정보와 함께 저장되었습니다!");
     }
 
-    /**
-     * 🎯 핵심 메서드: 아티스트와 곡명만으로 완전한 Song 저장
-     */
+//핵심 메서드: 아티스트와 곡명만으로 완전한 Song 저장
+
     private void addSong(String artist, String title) {
         if (spotifyService != null) {
             try {
                 // Spotify API로 모든 정보 자동 채우기
                 Song song = spotifyService.enrichSongFromSpotify(artist, title);
-
-//                // YouTube URL도 추가 (선택사항)
+                song.setImageUrl(spotifyService.getTrackById(song.getAlbum()).getImageUrl());
+//                // YouTube URL도 추가
 //                if (song.getYoutubeUrl() == null) {
 //                    song.setYoutubeUrl(spotifyService.searchYouTubeUrl(artist, title));
 //                }
 
                 songService.saveSong(song);
 
-                System.out.println(String.format("  ✅ %s - %s (앨범: %s, %d년, %d초)",
+                System.out.printf("   %s - %s (앨범: %s, %d년, %d초)%n",
                         artist, title,
                         song.getAlbum() != null ? song.getAlbum() : "N/A",
                         song.getYearReleased() != null ? song.getYearReleased() : 0,
-                        song.getDuration() != null ? song.getDuration() : 0));
+                        song.getDuration() != null ? song.getDuration() : 0);
 
             } catch (Exception e) {
-                System.err.println("  ❌ 실패: " + artist + " - " + title + " (" + e.getMessage() + ")");
+                System.err.println(" 실패: " + artist + " - " + title + " (" + e.getMessage() + ")");
 
                 // 실패해도 기본 정보로라도 저장
                 Song basicSong = new Song();
@@ -151,7 +149,7 @@ public class DataInitializer implements CommandLineRunner {
             basicSong.setGenre("Pop");
             basicSong.setCategory("POP");
             songService.saveSong(basicSong);
-            System.out.println("  ⚠️ Spotify 비활성화: " + artist + " - " + title);
+            System.out.println("Spotify 비활성화: " + artist + " - " + title);
         }
 
         // API 호출 제한 방지를 위한 대기

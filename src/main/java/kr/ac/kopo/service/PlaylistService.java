@@ -23,9 +23,8 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final SongRepository songRepository;
 
-    /**
-     * 재생목록에 곡 추가
-     */
+    //재생목록에 곡 추가
+
     public Playlist addToPlaylist(User user, Long songId) {
         // 이미 있는지 확인
         Optional<Playlist> existing = playlistRepository.findByUserAndSongId(user, songId);
@@ -44,9 +43,8 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    /**
-     * 재생목록에서 제거
-     */
+    //재생목록에서 제거
+
     public void removeFromPlaylist(User user, Long playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("재생목록 항목을 찾을 수 없습니다"));
@@ -58,16 +56,14 @@ public class PlaylistService {
         playlistRepository.delete(playlist);
     }
 
-    /**
-     * 사용자의 재생목록 가져오기
-     */
+    //사용자의 재생목록 가져오기
+
     public List<Playlist> getUserPlaylist(User user) {
         return playlistRepository.findByUserOrderByAddedAtDesc(user);
     }
 
-    /**
-     * 즐겨찾기 토글
-     */
+    //즐겨찾기 토글
+
     public Playlist toggleFavorite(User user, Long playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("재생목록 항목을 찾을 수 없습니다"));
@@ -80,9 +76,7 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    /**
-     * 재생 횟수 증가
-     */
+//재생 횟수 증가
     public void incrementPlayCount(Long playlistId) {
         playlistRepository.findById(playlistId).ifPresent(playlist -> {
             playlist.setPlayCount(playlist.getPlayCount() + 1);
@@ -90,9 +84,8 @@ public class PlaylistService {
         });
     }
 
-    /**
-     * 추천 곡 (사용자가 듣지 않은 인기 곡)
-     */
+//추천 곡 (사용자가 듣지 않은 인기 곡)
+
     public List<Song> getRecommendedSongs(User user, int limit) {
         // 사용자의 재생목록에 있는 곡 ID 가져오기
         List<Long> userSongIds = getUserPlaylist(user).stream()
@@ -106,9 +99,7 @@ public class PlaylistService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 재생목록 개수
-     */
+    //재생목록 개수
     public Long getPlaylistCount(User user) {
         return playlistRepository.countByUser(user);
     }

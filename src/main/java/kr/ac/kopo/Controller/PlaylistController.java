@@ -20,9 +20,8 @@ public class PlaylistController {
     private final PlaylistService playlistService;
     private final UserService userService;
 
-    /**
-     * 재생목록에 추가
-     */
+//재생목록에 추가
+
     @PostMapping("/add/{songId}")
     public ResponseEntity<Map<String, Object>> addToPlaylist(
             @PathVariable Long songId,
@@ -39,9 +38,8 @@ public class PlaylistController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * 재생목록에서 제거
-     */
+//재생목록에서 제거
+
     @DeleteMapping("/remove/{playlistId}")
     public ResponseEntity<Map<String, Object>> removeFromPlaylist(
             @PathVariable Long playlistId,
@@ -57,9 +55,8 @@ public class PlaylistController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * 즐겨찾기 토글
-     */
+//즐겨찾기 토글
+
     @PostMapping("/favorite/{playlistId}")
     public ResponseEntity<Map<String, Object>> toggleFavorite(
             @PathVariable Long playlistId,
@@ -75,9 +72,8 @@ public class PlaylistController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * 재생 횟수 증가
-     */
+//재생 횟수 증가
+
     @PostMapping("/play/{playlistId}")
     public ResponseEntity<Void> incrementPlayCount(@PathVariable Long playlistId) {
         playlistService.incrementPlayCount(playlistId);
